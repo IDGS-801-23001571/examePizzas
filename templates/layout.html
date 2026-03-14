@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Pizzería</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <header class="bg-red-600 shadow-md">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-white text-center">
+                Sistema de Pizzería
+            </h1>
+            
+            <nav>
+                <ul class="flex space-x-4">
+                    <li>
+                        <a href="{{ url_for('pedidos.index') }}" class="text-white hover:text-gray-300">Nuevo pedido</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('historial.historial_pedidos') }}" class="text-white hover:text-gray-300">Historial de pedidos</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="min-h-screen px-4 py-8">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="max-w-4xl mx-auto mb-4 px-4 py-3 rounded-lg bg-green-100 text-green-800 border border-green-300">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block container %}
+        {% endblock %}
+    </main>
+
+</body>
+</html>

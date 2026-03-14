@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block container %}
+<div class="max-w-6xl mx-auto">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Historial de pedidos</h2>
+
+    <!-- Filtros -->
+    <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+        <form method="GET" action="{{ url_for('historial.historial_pedidos') }}" class="flex gap-4 items-end">
+            <!-- Selector de tipo de filtro -->
+            <div class="flex-1">
+                <label class="block mb-2 text-sm font-medium text-gray-900">Filtrar por:</label>
+                <select name="tipo_filtro" id="tipo_filtro" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-3 py-2">
+                    <option value="dia_semana" {% if tipo_filtro == 'dia_semana' %}selected{% endif %}>Día de la semana</option>
+                    <option value="mes" {% if tipo_filtro == 'mes' %}selected{% endif %}>Mes</option>
+                </select>
+            </div>
+
+            <!-- Selector de día de la semana (se muestra solo si el filtro es día) -->
+            {% if tipo_filtro == 'dia_semana' or not tipo_filtro %}
+            <div class="flex-1">
+                <label class="block mb-2 text-sm font-medium text-gray-900">Selecciona el día:</label>
+                <select name="dia_semana" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-3 py-2">
+                    <option value="">-- Selecciona --</option>
+                    <option value="0" {% if dia_semana == '0' %}selected{% endif %}>Lunes</option>
+                    <option value="1" {% if dia_semana == '1' %}selected{% endif %}>Martes</option>
+                    <option value="2" {% if dia_semana == '2' %}selected{% endif %}>Miércoles</option>
+                    <option value="3" {% if dia_semana == '3' %}selected{% endif %}>Jueves</option>
+                    <option value="4" {% if dia_semana == '4' %}selected{% endif %}>Viernes</option>
+                    <option value="5" {% if dia_semana == '5' %}selected{% endif %}>Sábado</option>
+                    <option value="6" {% if dia_semana == '6' %}selected{% endif %}>Domingo</option>
+                </select>
+            </div>
+            {% endif %}
+
+            <!-- Selector de mes (se muestra solo si el filtro es mes) -->
+            {% if tipo_filtro == 'mes' or not tipo_filtro %}
+            <div class="flex-1">
+                <label class="block mb-2 text-sm font-medium text-gray-900">Selecciona el mes:</label>
+                <select name="mes" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-3 py-2">
+                    <option value="">-- Selecciona --</option>
+                    <option value="1" {% if mes == '1' %}selected{% endif %}>Enero</option>
+                    <option value="2" {% if mes == '2' %}selected{% endif %}>Febrero</option>
+                    <option value="3" {% if mes == '3' %}selected{% endif %}>Marzo</option>
+                    <option value="4" {% if mes == '4' %}selected{% endif %}>Abril</option>
+                    <option value="5" {% if mes == '5' %}selected{% endif %}>Mayo</option>
+                    <option value="6" {% if mes == '6' %}selected{% endif %}>Junio</option>
+                    <option value="7" {% if mes == '7' %}selected{% endif %}>Julio</option>
+                    <option value="8" {% if mes == '8' %}selected{% endif %}>Agosto</option>
+                    <option value="9" {% if mes == '9' %}selected{% endif %}>Septiembre</option>
+                    <option value="10" {% if mes == '10' %}selected{% endif %}>Octubre</option>
+                    <option value="11" {% if mes == '11' %}selected{% endif %}>Noviembre</option>
+                    <option value="12" {% if mes == '12' %}selected{% endif %}>Diciembre</option>
+                </select>
+            </div>
+            {% endif %}
+
+            <div>
+                <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-6 py-2.5">
+                    Filtrar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla de resultados -->
+    {% if pedidos %}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="w-full text-sm text-left text-gray-700">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-3 border">ID Pedido</th>
+                    <th class="px-4 py-3 border">Cliente</th>
+                    <th class="px-4 py-3 border">Fecha</th>
+                    <th class="px-4 py-3 border">Total</th>
+                    <th class="px-4 py-3 border">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3 border">{{ pedido.id_pedido }}</td>
+                    <td class="px-4 py-3 border">{{ pedido.cliente.nombre }}</td>
+                    <td class="px-4 py-3 border">{{ pedido.fecha.strftime('%d/%m/%Y') }}</td>
+                    <td class="px-4 py-3 border">${{ pedido.total }}</td>
+                    <td class="px-4 py-3 border">
+                        <a href="{{ url_for('historial.detalle_pedido', id=pedido.id_pedido) }}" 
+                           class="text-blue-600 hover:text-blue-800 hover:underline">
+                            Ver detalles
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        {% if tipo_filtro and (dia_semana or mes) %}
+        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+            No hay pedidos para el filtro seleccionado.
+        </div>
+        {% else %}
+        <p class="text-gray-500">Selecciona un filtro para ver los pedidos.</p>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% endblock %}

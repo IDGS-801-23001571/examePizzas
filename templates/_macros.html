@@ -1,0 +1,60 @@
+<!-- _macros.html - Solo lo esencial -->
+
+<!-- Inputs -->
+{% macro input_field(name, label, value='', type='text', disabled=False, min=None) %}
+<div>
+    <label class="block mb-2 text-sm font-medium text-gray-900">{{ label }}</label>
+    <input type="{{ type }}" 
+           name="{{ name }}" 
+           value="{{ value }}"
+           {% if min %}min="{{ min }}"{% endif %}
+           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-3 py-2"
+           {% if disabled %}disabled{% endif %}
+           required>
+</div>
+{% endmacro %}
+
+<!-- Selects día y mes -->
+{% macro select_field(name, label, options, selected='', disabled=False) %}
+<div>
+    <label class="block mb-2 text-sm font-medium text-gray-900">{{ label }}</label>
+    <select name="{{ name }}" 
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-3 py-2"
+            {% if disabled %}disabled{% endif %}
+            required>
+        <option value="">Selecciona {{ label|lower }}</option>
+        {% for value, text in options %}
+            <option value="{{ value }}" {% if selected == value %}selected{% endif %}>{{ text }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endmacro %}
+
+<!-- Radios y checkboxes -->
+{% macro radio_group(name, options) %}
+<div>
+    <label class="block mb-2 text-sm font-medium text-gray-900">Tamaño</label>
+    <div class="flex items-center">
+        {% for value, label, precio in options %}
+        <label class="mr-4">
+            <input type="radio" name="{{ name }}" value="{{ value }}" class="mr-2" {% if loop.first %}checked{% endif %}> 
+            {{ label }} ${{ precio }}
+        </label>
+        {% endfor %}
+    </div>
+</div>
+{% endmacro %}
+
+{% macro checkbox_group(name, options) %}
+<div>
+    <label class="block mb-2 text-sm font-medium text-gray-900">Ingredientes</label>
+    <div class="flex flex-col">
+        {% for value, label, precio in options %}
+        <label>
+            <input type="checkbox" name="{{ name }}" value="{{ value }}" class="mr-2"> 
+            {{ label }} ${{ precio }}
+        </label>
+        {% endfor %}
+    </div>
+</div>
+{% endmacro %}
